@@ -45,8 +45,4 @@ app.use(OpenApiValidator.middleware({
     operationHandlers: __dirname + "/routes"
 }));
 
-
-
-
-
 module.exports = app;
