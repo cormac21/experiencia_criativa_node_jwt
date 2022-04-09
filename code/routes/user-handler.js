@@ -16,10 +16,11 @@ const User = require('../model/User');
  */
 module.exports.users_list = [
   async function (req, res) {
-    res.json([
-        {name: 'Fulano'},
-        {name: 'Beltrano'},
-    ])
+    let users = await User.findAll({
+      order: [['name', 'ASC']]
+    });
+    users = users.map(u => u.get());
+    res.json(users);
   }
 ];
 
