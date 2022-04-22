@@ -7,3 +7,7 @@ Content-Type: application/json
 {
   "name": "Segundo teste"
 }
+
+###
+GET http://localhost:3000/api/users
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJQVUNQUiIsImlhdCI6MTY1MDY2ODc3MCwiZXhwIjoiMjAyMi0wNS0wMlQyMzowNjoxMC4xMzJaIiwidXNlciI6eyJpZCI6MX19.bLKgo4IsVJF8asW8V7l2Tpd0gYjTVQpKGYh_Hwjqya8
