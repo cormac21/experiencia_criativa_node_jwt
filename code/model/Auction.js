@@ -13,11 +13,11 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
         startTime: {
-            type: DataTypes.TIME,
+            type: DataTypes.DATE,
             allowNull: false,
         },
         endTime: {
-            type: DataTypes.TIME,
+            type: DataTypes.DATE,
             allowNull: false,
         },
         auction_status: {
