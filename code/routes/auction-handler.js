@@ -84,14 +84,14 @@ module.exports.list_open_auctions = [
  *     summary: Lista todos os leilões
  *     tags:
  *       - "auctions"
- *     operationId: list_open_auctions
+ *     operationId: list_all_auctions
  *     x-eov-operation-handler: auction-handler
  *
  *     responses:
  *      '200':
  *        description: "Sucesso"
  */
-module.exports.list_open_auctions = [
+module.exports.list_all_auctions = [
     async function (req, res) {
         let auctions = await models.auction.findAll();
         res.json(auctions);
@@ -99,4 +99,45 @@ module.exports.list_open_auctions = [
 ]
 
 
+/**
+ * @openapi
+ * /auction-items:
+ *   post:
+ *     summary: Adiciona um item ao leilão
+ *     tags:
+ *       - "auction-items"
+ *     operationId: create_auction_item
+ *     x-eov-operation-handler: auction-handler
+ *
+ *     requestBody:
+ *       description: "Auction Item to include"
+ *       content:
+ *         "application/json":
+ *           schema:
+ *             type: object
+ *             required:
+ *               - auctionId
+ *               - description
+ *             properties:
+ *               auctionId:
+ *                 type: integer
+ *               description:
+ *                 type: string
+ *
+ *     responses:
+ *      '200':
+ *        description: "Sucesso"
+ */
+module.exports.create_auction_item = [
+    async function (req, res) {
+        const { body: {auctionId, description} } = req;
+        let auction = await models.auction.findByPk(auctionId);
+        if ( auction ) {
+            let auctionItem = await models.auction_item.create({auctionId, description})
+            res.json(auctionItem);
+        } else {
+            res.status(400).send();
+        }
+    }
+]
 

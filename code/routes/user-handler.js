@@ -108,3 +108,46 @@ module.exports.users_get = [
     })
   }
 ];
+
+/**
+ * @openapi
+ * /users/login:
+ *   post:
+ *     summary: Gera um JWT do usuario autenticado
+ *     tags:
+ *       - "users"
+ *
+ *     operationId: authenticate
+ *     x-eov-operation-handler: user-handler
+ *
+ *     requestBody:
+ *       description: "A username and password combination"
+ *       content:
+ *         "application/json":
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "roxtar88"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "passw0rd"
+ *
+ *     responses:
+ *       '200':
+ *         description: "Retorna o token de autenticacao"
+ *       '404':
+ *         description: "Usuario nao encontrado"
+ *
+ */
+module.exports.authenticate = [
+  async function (req, res) {
+
+  }
+];
+
