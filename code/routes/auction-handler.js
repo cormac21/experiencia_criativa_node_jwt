@@ -1,8 +1,5 @@
 const { models } = require('../model/db')
-
-function convertTime(startTime) {
-    return startTime.replace('T', ' ').substring(0, startTime.length - 1);
-}
+const passport = require("passport");
 
 /**
  * @openapi
@@ -36,12 +33,70 @@ function convertTime(startTime) {
  *        description: "Leilão inserido"
  *      '400':
  *        description: "Parâmetros inválidos"
- *
+ *     security:
+ *      - JWT: []
  */
 module.exports.auctions_insert = [
+    passport.authenticate(['jwt', 'none'], {session: false}),
+
     async function (req, res) {
+        const userId = req.user?.id;
         const { body: {startTime, endTime}} = req;
-        const auction = models.auction.create({ startTime, endTime});
+        const auction = await models.auction.create({
+            startTime: startTime,
+            endTime: endTime,
+            status: 'pending',
+            createdByUser: userId});
         res.status(201).json(auction);
     }
 ];
+
+/**
+ * @openapi
+ * /auctions/open:
+ *   get:
+ *     summary: Lista todos os leilões abertos (em andamento)
+ *     tags:
+ *       - "auctions"
+ *     operationId: list_open_auctions
+ *     x-eov-operation-handler: auction-handler
+ *
+ *     responses:
+ *      '200':
+ *        description: "Sucesso"
+ *
+ */
+module.exports.list_open_auctions = [
+    async function (req, res) {
+        let auctions = await models.auction.findAll({
+            where: {
+                status: 'active'
+            }
+        })
+        res.json(auctions);
+    }
+]
+
+/**
+ * @openapi
+ * /auctions:
+ *   get:
+ *     summary: Lista todos os leilões
+ *     tags:
+ *       - "auctions"
+ *     operationId: list_open_auctions
+ *     x-eov-operation-handler: auction-handler
+ *
+ *     responses:
+ *      '200':
+ *        description: "Sucesso"
+ */
+module.exports.list_open_auctions = [
+    async function (req, res) {
+        let auctions = await models.auction.findAll();
+        res.json(auctions);
+    }
+]
+
+
+

@@ -1,27 +1,19 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-    sequelize.define('auction', {
+    sequelize.define('bid', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true
         },
-        createdByUser: {
+        createdByUserId: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        startTime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        endTime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        status: {
-            type: DataTypes.ENUM("pending", "active", "closed"),
+        amount: {
+            type: DataTypes.DECIMAL(10,2),
             allowNull: false,
         },
     });

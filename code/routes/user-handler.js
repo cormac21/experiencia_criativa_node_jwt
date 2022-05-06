@@ -1,4 +1,4 @@
-const User = require('../model/User');
+const { models } = require('../model/db')
 const { createToken } = require('./../jwt');
 const passport = require('passport');
 
@@ -24,7 +24,7 @@ module.exports.users_list = [
 
   async function (req, res) {
     const id = req.user?.id;
-    let users = await User.findAll({
+    let users = await models.user.findAll({
       order: [['name', 'ASC']]
     });
     users = users.map(u => ({
@@ -69,7 +69,7 @@ module.exports.users_list = [
 module.exports.users_insert = [
   async function (req, res) {
     const { body: {name}} = req;
-    const user = await User.create({name});
+    const user = await models.user.create({name});
     res.status(201).json(user);
   }
 ];
@@ -97,7 +97,7 @@ module.exports.users_insert = [
 module.exports.users_get = [
   async function (req, res) {
     const id = req.params.id;
-    const user = await User.findByPk(id);
+    const user = await models.user.findByPk(id);
     if (!user) {
       return res.status(404).send("Quebrou a bicicleta");
     }
