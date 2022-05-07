@@ -141,3 +141,69 @@ module.exports.create_auction_item = [
     }
 ]
 
+/**
+ * @openapi
+ * /auction-items/{id}:
+ *   delete:
+ *     summary: Remove um item de um leilão
+ *     tags:
+ *       - "auction-items"
+ *     parameters:
+ *       - $ref: "#/components/parameters/Id"
+ *
+ *     operationId: delete_auction_item
+ *     x-eov-operation-handler: auction-handler
+ *
+ *     responses:
+ *       '200':
+ *         description: "Excluido com sucesso"
+ *       '404':
+ *         description: "Item não encontrado"
+ *
+ */
+module.exports.delete_auction_item = [
+    async function( req, res ) {
+        const itemId = req.params.id;
+        const item = await models.auction_item.findByPk(itemId);
+        if ( item ) {
+            await item.destroy();
+            res.status(200).send();
+        } else {
+            res.status(404).send();
+        }
+    }
+]
+
+/**
+ * @openapi
+ * /auction-items/{id}:
+ *   post:
+ *     summary: Remove um item de um leilão
+ *     tags:
+ *       - "auction-items"
+ *     parameters:
+ *       - $ref: "#/components/parameters/Id"
+ *
+ *     operationId: update_auction_item
+ *     x-eov-operation-handler: auction-handler
+ *
+ *     responses:
+ *       '200':
+ *         description: "Excluido com sucesso"
+ *       '404':
+ *         description: "Item não encontrado"
+ *
+ */
+module.exports.update_auction_item = [
+    async function( req, res ) {
+        const itemId = req.params.id;
+        const item = await models.auction_item.findByPk(itemId);
+        if ( item ) {
+            await models.auction_item.update({ description: description}, {where: {id: itemId}});
+            res.status(200).send();
+        } else {
+            res.status(404).send();
+        }
+    }
+]
+
