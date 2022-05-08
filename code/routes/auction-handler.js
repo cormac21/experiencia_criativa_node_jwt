@@ -1,5 +1,6 @@
 const { models } = require('../model/db')
 const passport = require("passport");
+const validateTimes = require("../util/date-utils");
 
 /**
  * @openapi
@@ -8,7 +9,7 @@ const passport = require("passport");
  *     summary: Insere um leilão
  *     tags:
  *       - "auctions"
- *     operationId: auctions_insert
+ *     operationId: insert_auction
  *     x-eov-operation-handler: auction-handler
  *
  *     requestBody:
@@ -36,12 +37,13 @@ const passport = require("passport");
  *     security:
  *      - JWT: []
  */
-module.exports.auctions_insert = [
+module.exports.insert_auction = [
     passport.authenticate(['jwt', 'none'], {session: false}),
 
     async function (req, res) {
         const userId = req.user?.id;
         const { body: {startTime, endTime}} = req;
+        validateTimes(startTime, endTime);
         const auction = await models.auction.create({
             startTime: startTime,
             endTime: endTime,
@@ -50,6 +52,41 @@ module.exports.auctions_insert = [
         res.status(201).json(auction);
     }
 ];
+
+/**
+ * @openapi
+ * /auctions/{id}
+ *   delete:
+ *     summary: Exclui o leilão de id id
+ *     tags:
+ *       - "auctions"
+ *     operationId: delete_auction
+ *     x-eov-operation-handler: auction-handler
+ *     parameters:
+ *       - $ref: "#/components/parameters/Id"
+ *
+ *     responses:
+ *       '200':
+ *         description: "Sucesso!"
+ *       '403':
+ *         description: "Não autorizado!"
+ *       '404':
+ *         description: "Leilão não encontrado!"
+ *     security:
+ *       - JWT: []
+ */
+module.exports.delete_auction = [
+    passport.authenticate(['jwt', 'none'], {session: false}),
+
+    async function (req, res) {
+        const userId = req.user?.id;
+        const itemId = req.params.id;
+        const auction = models.auction.findByPk(itemId);
+        if ( userId !== auction.createdByUser) {
+            res.status('403').send();
+        }
+    }
+]
 
 /**
  * @openapi

@@ -24,5 +24,9 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM("pending", "active", "closed"),
             allowNull: false,
         },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     });
 }
