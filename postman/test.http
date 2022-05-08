@@ -5,9 +5,13 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-  "name": "Segundo teste"
+  "name": "User test"
 }
 
 ###
 GET http://localhost:3000/api/users
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJQVUNQUiIsImlhdCI6MTY1MDY2OTQyMSwiZXhwIjoiMjAyMi0wNS0wMlQyMzoxNzowMS4yOTdaIiwidXNlciI6eyJpZCI6Mn19.IJFkZd_cf9LvsD5jWlJ7ybPhcjQ2RNKUeG3mmjxdIig
+
+###
+
+

@@ -43,50 +43,87 @@ module.exports.insert_auction = [
     async function (req, res) {
         const userId = req.user?.id;
         const { body: {startTime, endTime}} = req;
-        validateTimes(startTime, endTime);
-        const auction = await models.auction.create({
-            startTime: startTime,
-            endTime: endTime,
-            status: 'pending',
-            createdByUser: userId});
-        res.status(201).json(auction);
+        try {
+            validateTimes(startTime, endTime);
+            const auction = await models.auction.create({
+                startTime: startTime,
+                endTime: endTime,
+                status: 'pending',
+                createdByUser: userId});
+            res.status(201).json(auction);
+        } catch (Error) {
+
+        }
     }
 ];
 
 /**
  * @openapi
- * /auctions/{id}
- *   delete:
- *     summary: Exclui o leilão de id id
+ * /auctions/{id}:
+ *   put:
+ *     summary: Altera um leilão existente
  *     tags:
  *       - "auctions"
- *     operationId: delete_auction
+ *     operationId: update_auction
  *     x-eov-operation-handler: auction-handler
- *     parameters:
- *       - $ref: "#/components/parameters/Id"
+ *
+ *     requestBody:
+ *       description: "Auction to include"
+ *       content:
+ *         "application/json":
+ *           schema:
+ *             type: object
+ *             required:
+ *               - startTime
+ *               - endTime
+ *             properties:
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *               name:
+ *                 type: string
+ *
  *
  *     responses:
- *       '200':
- *         description: "Sucesso!"
- *       '403':
- *         description: "Não autorizado!"
- *       '404':
- *         description: "Leilão não encontrado!"
+ *      '201':
+ *        description: "Leilão inserido"
+ *      '400':
+ *        description: "Parâmetros inválidos"
+ *      '404':
+ *        description: "Não encontrado!"
  *     security:
- *       - JWT: []
+ *      - JWT: []
  */
-module.exports.delete_auction = [
+module.exports.update_auction = [
     passport.authenticate(['jwt', 'none'], {session: false}),
-
     async function (req, res) {
         const userId = req.user?.id;
-        const itemId = req.params.id;
-        const auction = models.auction.findByPk(itemId);
-        if ( userId !== auction.createdByUser) {
-            res.status('403').send();
+        const auctionId = req.params.id;
+        const { body: {startTime, endTime, name}} = req;
+        try {
+            validateTimes(startTime, endTime);
+            const auction = await models.auction.findByPk(auctionId);
+            if (auction) {
+                auction.update({
+                    startTime: startTime,
+                    endTime: endTime,
+                    name: name
+                }, {
+                    where: { id: auctionId }
+                }).then();
+            } else {
+                res.status(404).send();
+            }
+        } catch (Error) {
+            res.status(400).send();
         }
     }
 ]
+
+
 
 /**
  * @openapi

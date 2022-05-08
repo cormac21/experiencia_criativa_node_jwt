@@ -1,6 +1,8 @@
 tags:
   - name: users
     description: User and login functions
+  - name: auctions
+    description: Auction and auction functions
 components:
   schemas:
     Id:
