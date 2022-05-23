@@ -12,7 +12,7 @@ const passport = require('passport');
 const jwt = require('./jwt')
 
 const app = express();
-const database = require('./model/db')
+const database = require('../models')
 
 app.use(logger('dev'));
 app.use(passport.initialize());

@@ -1,4 +1,4 @@
-const { models } = require('../model/db')
+const { models } = require('../../models')
 const passport = require("passport");
 const validateTimes = require("../util/date-utils");
 
@@ -52,7 +52,7 @@ module.exports.insert_auction = [
                 createdByUser: userId});
             res.status(201).json(auction);
         } catch (Error) {
-
+            console.log( Error )
         }
     }
 ];
